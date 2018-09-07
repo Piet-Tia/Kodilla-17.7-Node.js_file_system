@@ -1,28 +1,38 @@
-const OSinfo = require('./modules/OSinfo');
+const fs = require('fs');
 
-process.stdin.setEncoding('utf-8');
-
-process.stdin.on('readable', function() {
-	// metoda .read() ma za zadanie odczytać co użytkownik podał na wejściu
-	const input = process.stdin.read();
-	if(input !== null) {
-		const instruction = input.toString().trim();
-		switch (instruction) {
-			case '/exit':
-				process.stdout.write('Quitting app!\n');
-				process.exit();
-				break;
-			case '/showinfo':
-				const nodeVersion = process.versions.node;
-				const userLanguage = process.env.LANG;
-				process.stdout.write('\r\nNode Version: ' + nodeVersion + '\r\nYour language: ' + userLanguage);
-				break;
-			case '/getOSinfo':
-				OSinfo.print();
-				break;
-			default:
-				process.stderr.write('Wrong instruction!');
-		}
-	}
+fs.readdir('./','utf-8',function(err, data){
+	if (err) throw err;
+	const dirList = data;
+	fs.writeFile('./directoryContent.txt', dirList, function() {
+		console.log('The file has been saved!');
+	});
 });
 
+
+/*
+
+const os = require('os');
+const colors = require('colors');
+const EOL = os.EOL;
+
+fs.readFile('./tekst.txt', 'utf-8', function(err, data) {
+    console.log('Dane przed zapisem!'.blue);
+    console.log(data);
+    fs.appendFile('./tekst.txt', EOL + 'A tak wyglądają po zapisie!', function(err) {
+        if (err) throw err;
+        console.log('Zapisano!'.blue);
+        fs.readFile('./tekst.txt', 'utf-8', function(err, data) {
+            console.log('Dane po zapisie'.blue)
+            console.log(data);
+        });
+    });
+});
+
+var StatMode = require('stat-mode');
+
+fs.stat('./cat.jpg', function(err, stats) {
+    var statMode = new StatMode(stats);
+    console.log(statMode.toString());
+});
+
+*/
